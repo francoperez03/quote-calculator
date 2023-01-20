@@ -8,6 +8,7 @@ import {
   InternalError,
   ErrorType,
 } from "./utils/api-error";
+import routes from "./routes";
 
 process.on("uncaughtException", (e) => {
   logger.error(e);
@@ -22,6 +23,7 @@ async function startServer() {
   app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
 
   // Routes
+  app.use("/", routes);
 
   // catch 404 and forward to error handler
   app.use((req: Request, res: Response, next: NextFunction) =>
