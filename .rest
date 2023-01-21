@@ -1,4 +1,8 @@
-### GET
-GET http://localhost:3000/orders
+### GET ETHUSD
+GET http://localhost:3000/orders?pairName=ETHUSD
+### GET ETHUSD
+GET http://localhost:3000/orders?pairName=ETHUSD
+### GET MATICUSD Expect Error
+GET http://localhost:3000/orders?pairName=MATICUSD
 ### GET
 GET http://localhost:3000/orders/prices
