@@ -63,7 +63,7 @@ export default class RateProvider implements IRateProvider {
 
   getRate(rate: string) {
     if (rates.has(rate)) {
-      return rates.get(BTC_USD_SYMBOL);
+      return rates.get(rate);
     }
     throw new Error("Rate not supported");
   }
