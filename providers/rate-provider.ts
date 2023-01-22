@@ -1,7 +1,8 @@
 import ws from "ws";
 import * as dotenv from "dotenv";
 import logger from "../utils/logger";
-import { Service } from "typedi";
+import { Container } from "typedi";
+import { IRateProvider } from "interfaces/rate-provider.interface";
 dotenv.config();
 
 const BTC_USD_SYMBOL = "BTCUSD";
@@ -18,8 +19,7 @@ const wsClient = new ws(WS_SERVER_URL);
 const rates = new Map();
 const currencies = new Map();
 
-@Service()
-export default class QuotesProvider {
+export default class RateProvider implements IRateProvider {
   constructor() {
     wsClient.on("open", () => {
       wsClient.send(
@@ -68,3 +68,5 @@ export default class QuotesProvider {
     throw new Error("Rate not supported");
   }
 }
+
+Container.set("RateProvider", new RateProvider());

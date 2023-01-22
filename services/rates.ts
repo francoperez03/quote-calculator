@@ -1,22 +1,20 @@
 import { Service, Inject } from "typedi";
-import { IQuotesProvider } from "interfaces/quotes-provider.interface";
-import QuotesProvider from "../loaders/quotes-provider";
+import { IRateProvider } from "interfaces/rate-provider.interface";
+import logger from "../utils/logger";
 
 @Service()
 export default class RateService {
   constructor(
-    @Inject()
-    private quoteProvider: QuotesProvider
+    @Inject("RateProvider")
+    private rateProvider: IRateProvider
   ) {}
 
   public async getConversionRate({ rate }: { rate: string }) {
     try {
-      console.log(this.quoteProvider);
-      const result = this.quoteProvider.getRate(rate);
-      console.log("RESULT:", { result });
+      const result = this.rateProvider.getRate(rate);
       return result;
     } catch (e) {
-      console.log({ e });
+      logger.error({ e });
       return { delivered: 0, status: "error" };
     }
   }

@@ -10,13 +10,13 @@ import {
   ErrorType,
 } from "./utils/api-error";
 import routes from "./routes";
-import setupLoaders from "./loaders";
+import setupProviders from "./providers";
 
 process.on("uncaughtException", (e) => {
   logger.error(e);
 });
 async function startServer() {
-  await setupLoaders();
+  await setupProviders();
   const app = express();
 
   app.use(express.json({ limit: "10mb" }));
