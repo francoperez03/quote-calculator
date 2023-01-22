@@ -1,5 +1,8 @@
 {
   "compilerOptions": {
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictPropertyInitialization": false,
     // project options
     "lib": [
       "ESNext",
@@ -34,5 +37,5 @@
   ],
   "paths": {
     "utils": ["utils/"] // this mapping is relative to "baseUrl"
-  }
+  },
 }

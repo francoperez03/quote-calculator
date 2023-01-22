@@ -2,20 +2,22 @@ import express, { Request, Response, NextFunction } from "express";
 import { SuccessResponse } from "../utils/api-response";
 import { NotFoundError } from "utils/api-error";
 import { celebrate, Joi, Segments, errors } from "celebrate";
-
+import RateService from "../services/rates";
+import { Container } from "typedi";
 const router = express.Router();
 
 router.get(
-  "/",
+  "/:rate",
   celebrate({
-    [Segments.QUERY]: {
-      pairName: Joi.string().required(),
+    [Segments.PARAMS]: {
+      rate: Joi.string(),
     },
   }),
   async (req: Request, res: Response) => {
-    const { pairName } = req.query;
-    console.log(pairName);
-    return new SuccessResponse("Success", {}).send(res);
+    const rate: string = req.params["rate"] || "";
+    const rateService = Container.get(RateService);
+    const result = await rateService.getConversionRate({ rate });
+    return new SuccessResponse("Success", result).send(res);
   }
 );
 router.get(

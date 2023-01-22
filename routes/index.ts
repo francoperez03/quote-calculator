@@ -1,7 +1,7 @@
 import { Router } from "express";
-import orders from "./quotes";
+import rates from "./rates";
 
 const router = Router();
-router.use("/orders", orders);
+router.use("/rates", rates);
 
 export default router;

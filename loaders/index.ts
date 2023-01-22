@@ -1,7 +1,8 @@
 import logger from "../utils/logger";
-import wsClientLoader from "./ws-client";
+import QuotesProvider from "./quotes-provider";
+import dependencyInjectorLoader from "./dependency-injector";
 
 export default async () => {
-  wsClientLoader();
+  const quoteProvider = new QuotesProvider();
   logger.info("Websocket client connected");
 };
