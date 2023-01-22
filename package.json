@@ -19,13 +19,19 @@
   },
   "homepage": "https://github.com/francoperez03/challenge-rather-labs#readme",
   "dependencies": {
+    "celebrate": "^15.0.1",
     "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "winston": "^3.8.2"
+    "reflect-metadata": "^0.1.13",
+    "typedi": "^0.10.0",
+    "winston": "^3.8.2",
+    "ws": "^8.12.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.15",
+    "@types/ws": "^8.5.4",
     "nodemon": "^2.0.20",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.4"

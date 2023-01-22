@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import express, { Request, Response, NextFunction } from "express";
 import logger from "./utils/logger";
 import cors from "cors";
@@ -8,11 +9,14 @@ import {
   InternalError,
   ErrorType,
 } from "./utils/api-error";
+import routes from "./routes";
+import setupProviders from "./providers";
 
 process.on("uncaughtException", (e) => {
   logger.error(e);
 });
 async function startServer() {
+  await setupProviders();
   const app = express();
 
   app.use(express.json({ limit: "10mb" }));
@@ -22,6 +26,7 @@ async function startServer() {
   app.use(cors({ origin: corsUrl, optionsSuccessStatus: 200 }));
 
   // Routes
+  app.use("/", routes);
 
   // catch 404 and forward to error handler
   app.use((req: Request, res: Response, next: NextFunction) =>
