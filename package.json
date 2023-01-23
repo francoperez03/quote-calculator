@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/francoperez03/challenge-rather-labs#readme",
   "dependencies": {
+    "avl": "^1.5.3",
     "celebrate": "^15.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",

@@ -1,3 +1,10 @@
 export interface IRateProvider {
-  getRate: (rate: string) => any;
+  getOrderBook({
+    pair,
+    operation,
+  }: {
+    pair: string;
+    operation: string;
+  }): Array<any>;
+  getRate: ({ pair }: { pair: string }) => any;
 }

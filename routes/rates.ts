@@ -7,32 +7,38 @@ import { Container } from "typedi";
 const router = express.Router();
 
 router.get(
-  "/:rate",
+  "/quotes",
   celebrate({
-    [Segments.PARAMS]: {
-      rate: Joi.string(),
+    [Segments.QUERY]: {
+      pair: Joi.string(),
+      operation: Joi.string(),
+      amount: Joi.number(),
     },
   }),
   async (req: Request, res: Response) => {
-    const rate: string = req.params["rate"] || "";
+    const pair: string = req.query["pair"] as string;
+    const operation: string = req.query["operation"] as string;
+    const amount: number = parseInt(req.query["amount"] as string);
     const rateService = Container.get(RateService);
-    const result = await rateService.getConversionRate({ rate });
+    const result = await rateService.getQuote({ pair, operation, amount });
     return new SuccessResponse("Success", result).send(res);
   }
 );
+
 router.get(
-  "/prices",
+  "/:pair",
   celebrate({
-    [Segments.QUERY]: {
-      pairName: Joi.string().required(),
-      operation: Joi.string().required(),
-      amount: Joi.number().required(),
+    [Segments.PARAMS]: {
+      pair: Joi.string(),
     },
   }),
   async (req: Request, res: Response) => {
-    const { pairName, operation, amount } = req.params;
-    return new SuccessResponse("Success", {}).send(res);
+    const pair: string = req.params["pair"] || "";
+    const rateService = Container.get(RateService);
+    const result = await rateService.getRate({ pair });
+    return new SuccessResponse("Success", result).send(res);
   }
 );
+
 router.use(errors());
 export default router;

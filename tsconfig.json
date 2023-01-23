@@ -4,10 +4,7 @@
     "emitDecoratorMetadata": true,
     "strictPropertyInitialization": false,
     // project options
-    "lib": [
-      "ESNext",
-      "dom"
-    ], // specifies which default set of type definitions to use ("DOM", "ES6", etc)
+    "lib": ["ESNext", "dom"], // specifies which default set of type definitions to use ("DOM", "ES6", etc)
     "outDir": "lib", // .js (as well as .d.ts, .js.map, etc.) files will be emitted into this directory.,
     "removeComments": true, // Strips all comments from TypeScript files when converting into JavaScript- you rarely read compiled code so this saves space
     "target": "es2017", // Target environment. Most modern browsers support ES6, but you may want to set it to newer or older. (defaults to ES3)
@@ -29,13 +26,11 @@
     "strictNullChecks": true, // When strictNullChecks is true, null and undefined have their own distinct types and you’ll get a type error if you try to use them where a concrete value is expected.
 
     // Linter Checks
-    "noUncheckedIndexedAccess": true, // accessing index must always check for undefined
+    "noUncheckedIndexedAccess": true // accessing index must always check for undefined
   },
   "include": ["./**/*.ts"],
-  "exclude": [
-    "node_modules/**/*"
-  ],
+  "exclude": ["node_modules/**/*"],
   "paths": {
     "utils": ["utils/"] // this mapping is relative to "baseUrl"
-  },
+  }
 }
