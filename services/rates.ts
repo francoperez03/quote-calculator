@@ -26,14 +26,25 @@ export default class RateService {
       const orderBook = this.rateProvider.getOrderBook({ pair, operation });
       if (operation === "buy") {
         do {
-          console.log({ orderBook });
-          console.log({ amountleft });
           if (amountleft < orderBook[index].amount) {
             effectivePrice += amountleft * orderBook[index].price;
           } else {
             effectivePrice += orderBook[index].amount * orderBook[index].price;
           }
           amountleft -= orderBook[index].amount;
+          index++;
+        } while (index < orderBook.length && amountleft > 0);
+      }
+      if (operation === "sell") {
+        do {
+          const currentIndex = orderBook.length - 1 - index;
+          if (amountleft < orderBook[currentIndex].amount) {
+            effectivePrice += amountleft * orderBook[currentIndex].price;
+          } else {
+            effectivePrice +=
+              orderBook[currentIndex].amount * orderBook[currentIndex].price;
+          }
+          amountleft -= orderBook[currentIndex].amount;
           index++;
         } while (index < orderBook.length && amountleft > 0);
       }
