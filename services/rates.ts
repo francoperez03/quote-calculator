@@ -9,9 +9,28 @@ export default class RateService {
     private rateProvider: IRateProvider
   ) {}
 
-  public async getConversionRate({ rate }: { rate: string }) {
+  public async getQuote({
+    pair,
+    operation,
+    amount,
+  }: {
+    pair: string;
+    operation: string;
+    amount: number;
+  }) {
     try {
-      const result = this.rateProvider.getRate(rate);
+      //LOGIC
+      const result = this.rateProvider.getQuote({ pair, operation, amount });
+      return result;
+    } catch (e) {
+      logger.error({ e });
+      return { delivered: 0, status: "error" };
+    }
+  }
+
+  public async getRate({ pair }: { pair: string }) {
+    try {
+      const result = this.rateProvider.getRate({ pair });
       return result;
     } catch (e) {
       logger.error({ e });

@@ -3,10 +3,10 @@ GET http://localhost:3000/rates/ETHUSD
 ### GET ETHUSD
 GET http://localhost:3000/rates/BTCUSD
 ### GET MATICUSD Expect Error
-GET http://localhost:3000/rates?pairName=MATICUSD
+GET http://localhost:3000/rates/MATIUSD
 ### GET MATICUSD Expect Error
 GET http://localhost:3000/rates
 
 
 ### GET
-GET http://localhost:3000/rates/prices
+GET http://localhost:3000/rates/quotes?pair=ETHUSD&operation=buy&amount=10
