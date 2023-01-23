@@ -18,7 +18,7 @@ router.get(
   async (req: Request, res: Response) => {
     const pair: string = req.query["pair"] as string;
     const operation: string = req.query["operation"] as string;
-    const amount: number = parseInt(req.query["operation"] as string);
+    const amount: number = parseInt(req.query["amount"] as string);
     const rateService = Container.get(RateService);
     const result = await rateService.getQuote({ pair, operation, amount });
     return new SuccessResponse("Success", result).send(res);
