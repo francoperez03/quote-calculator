@@ -1,12 +1,10 @@
 export interface IRateProvider {
-  getQuote: ({
+  getOrderBook({
     pair,
     operation,
-    amount,
   }: {
     pair: string;
     operation: string;
-    amount: number;
-  }) => any;
+  }): Array<any>;
   getRate: ({ pair }: { pair: string }) => any;
 }

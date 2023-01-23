@@ -10,3 +10,9 @@ GET http://localhost:3000/rates
 
 ### GET
 GET http://localhost:3000/rates/quotes?pair=ETHUSD&operation=buy&amount=10
+### GET
+GET http://localhost:3000/rates/quotes?pair=ETHUSD&operation=sell&amount=10
+### GET
+GET http://localhost:3000/rates/quotes?pair=BTCUSD&operation=buy&amount=10
+### GET
+GET http://localhost:3000/rates/quotes?pair=BTCUSD&operation=sell&amount=10

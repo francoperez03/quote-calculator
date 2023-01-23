@@ -19,33 +19,13 @@ const orderBooks = new Map(); //orderBooks {key:'pairName',data:AVLTree}
 export default class RateProvider implements IRateProvider {
   constructor() {
     wsClient.on("open", () => {
-      wsClient.send(
-        JSON.stringify({
-          event: "subscribe",
-          channel: "ticker",
-          symbol: BTC_USD_SYMBOL,
-        })
-      );
-
-      wsClient.send(
-        JSON.stringify({
-          event: "subscribe",
-          channel: "ticker",
-          symbol: ETH_USD_SYMBOL,
-        })
-      );
-
-      wsClient.send(
-        JSON.stringify({
-          event: "subscribe",
-          channel: "book",
-          symbol: ETH_USD_SYMBOL,
-        })
-      );
+      this.subscribeToChannel({ channel: "ticker", pair: BTC_USD_SYMBOL });
+      this.subscribeToChannel({ channel: "ticker", pair: ETH_USD_SYMBOL });
+      this.subscribeToChannel({ channel: "book", pair: BTC_USD_SYMBOL });
+      this.subscribeToChannel({ channel: "book", pair: ETH_USD_SYMBOL });
     });
 
     wsClient.on("message", (data: Buffer) => {
-      // logger.info("A message arrived!");
       const dataParsed = JSON.parse(data.toString());
       if (!Array.isArray(dataParsed)) {
         this.registerMaps({ dataParsed });
@@ -60,16 +40,32 @@ export default class RateProvider implements IRateProvider {
             askSize,
           });
         } else if (orderBooksRegistered.has(channelId)) {
-          if (Array.isArray(payload)) {
-            payload.forEach((payloadRow) => {
+          if (payload.length === 2) {
+            for (const payloadRow of payload) {
               this.updateOrderBook({ channelId, payload: payloadRow });
-            });
+            }
           } else {
             this.updateOrderBook({ channelId, payload });
           }
         }
       }
     });
+  }
+
+  private subscribeToChannel({
+    channel,
+    pair,
+  }: {
+    channel: string;
+    pair: string;
+  }) {
+    wsClient.send(
+      JSON.stringify({
+        event: "subscribe",
+        channel: channel,
+        symbol: pair,
+      })
+    );
   }
 
   private registerMaps({ dataParsed }: { dataParsed: any }) {
@@ -99,51 +95,57 @@ export default class RateProvider implements IRateProvider {
     channelId: number;
     payload: any;
   }) {
-    const [price, count, amount] = payload;
-    if (count > 0) {
-      if (amount > 0) {
-        const orderBook = orderBooks.get(
-          orderBooksRegistered.get(channelId) + "_BIDS"
-        );
-        orderBook.remove(price);
-        orderBook.insert(price, { count, amount });
-      } else if (amount < 0) {
-        const orderBook = orderBooks.get(
-          orderBooksRegistered.get(channelId) + "_ASKS"
-        );
-        orderBook.remove(price);
-        orderBook.insert(price, { count, amount });
+    try {
+      const [price, count, amount] = payload;
+      if (count > 0) {
+        if (amount > 0) {
+          const orderBook = orderBooks.get(
+            orderBooksRegistered.get(channelId) + "_BIDS"
+          );
+          orderBook.remove(price);
+          orderBook.insert(price, { price, count, amount });
+        } else if (amount < 0) {
+          const orderBook = orderBooks.get(
+            orderBooksRegistered.get(channelId) + "_ASKS"
+          );
+          orderBook.remove(price);
+          orderBook.insert(price, { price, count, amount: -amount });
+        }
+      } else {
+        if (amount === 1) {
+          const orderBook = orderBooks.get(
+            orderBooksRegistered.get(channelId) + "_BIDS"
+          );
+          orderBook.remove(price);
+        } else if (amount === -1) {
+          const orderBook = orderBooks.get(
+            orderBooksRegistered.get(channelId) + "_ASKS"
+          );
+          orderBook.remove(price);
+        }
       }
-    } else {
-      if (amount === 1) {
-        const orderBook = orderBooks.get(
-          orderBooksRegistered.get(channelId) + "_BIDS"
-        );
-        orderBook.remove(price);
-      } else if (amount === -1) {
-        const orderBook = orderBooks.get(
-          orderBooksRegistered.get(channelId) + "_ASKS"
-        );
-        orderBook.remove(price);
-      }
+    } catch (e) {
+      console.log("ERROR:", e.toString());
     }
   }
 
-  getQuote({
-    pair,
-    operation,
-    amount,
-  }: {
-    pair: string;
-    operation: string;
-    amount: number;
-  }) {}
+  getOrderBook({ pair, operation }: { pair: string; operation: string }) {
+    if (orderBooks.has(pair + "_BIDS") || orderBooks.has(pair + "_ASKS")) {
+      if (operation === "buy") {
+        return orderBooks.get(pair + "_ASKS").values();
+      } else if (operation === "sell") {
+        return orderBooks.get(pair + "_BIDS").values();
+      }
+      throw new Error("Operation not supported");
+    }
+    throw new Error("Pair not supported");
+  }
 
   getRate({ pair }: { pair: string }) {
     if (rates.has(pair)) {
       return rates.get(pair);
     }
-    throw new Error("Rate not supported");
+    throw new Error("Pair not supported");
   }
 }
 

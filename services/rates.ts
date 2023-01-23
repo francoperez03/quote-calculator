@@ -20,10 +20,10 @@ export default class RateService {
   }) {
     try {
       //LOGIC
-      const result = this.rateProvider.getQuote({ pair, operation, amount });
+      const result = this.rateProvider.getOrderBook({ pair, operation });
       return result;
     } catch (e) {
-      logger.error({ e });
+      logger.error("rates service", { e });
       return { delivered: 0, status: "error" };
     }
   }
@@ -33,7 +33,7 @@ export default class RateService {
       const result = this.rateProvider.getRate({ pair });
       return result;
     } catch (e) {
-      logger.error({ e });
+      logger.error("rates service", { e });
       return { delivered: 0, status: "error" };
     }
   }
